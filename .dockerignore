@@ -1,0 +1,41 @@
+# --- VCS ---
+.git
+.gitignore
+
+# --- Local virtualenv (rebuilt inside the image) ---
+.venv
+
+# --- Secrets / local config (must be injected at runtime, never baked in) ---
+.env
+.env.*
+!.env.example
+
+# --- Python caches / build artifacts ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+wheels/
+
+# --- Tooling caches ---
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# --- Tests & docs (not needed to build/run) ---
+# NOTE: README.md is kept — pyproject.toml references it as the package readme,
+# so `uv sync` needs it present in the build context.
+tests/
+docs/
+dev-docs/
+
+# --- Editor / OS noise ---
+.idea/
+.vscode/
+.DS_Store
+
+# --- Docker ---
+Dockerfile
+.dockerignore
+docker-compose*.yml
