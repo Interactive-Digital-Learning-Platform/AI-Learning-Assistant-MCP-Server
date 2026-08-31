@@ -67,6 +67,14 @@ ENV PYTHONUNBUFFERED=1 \
     HOST=0.0.0.0 \
     PORT=8006
 
+# WeasyPrint native deps (Pango / Cairo / HarfBuzz / GDK-PixBuf) + a base font,
+# for the `generate_pdf` tool.
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends \
+      libpango-1.0-0 libpangoft2-1.0-0 libharfbuzz0b libfontconfig1 \
+      libcairo2 libgdk-pixbuf-2.0-0 libffi8 shared-mime-info fonts-dejavu-core \
+ && rm -rf /var/lib/apt/lists/*
+
 # Drop privileges: fixed non-root uid/gid, no login shell, no home writes.
 RUN groupadd --system --gid 10001 app \
  && useradd --system --uid 10001 --gid app --home-dir /app --shell /usr/sbin/nologin app

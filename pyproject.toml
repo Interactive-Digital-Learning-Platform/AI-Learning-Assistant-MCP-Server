@@ -5,10 +5,13 @@ description = "MCP capability server for the AI Learning Assistant (web search).
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "aioboto3>=14.0.0",
     "fastmcp>=3.4.7",
     "httpx>=0.28.0",
+    "markdown>=3.7",
     "pydantic-settings>=2.14.2",
     "tavily-python>=0.7.0",
+    "weasyprint>=63.0",
 ]
 
 [dependency-groups]
