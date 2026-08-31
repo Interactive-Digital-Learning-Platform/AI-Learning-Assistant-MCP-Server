@@ -47,3 +47,59 @@ class WebSearchResponse(BaseModel):
     provider: str = Field(description="Identifier of the search provider used.")
     result_count: int
     results: list[WebSearchResultItem]
+
+
+PdfStatus = Literal["completed", "failed"]
+
+
+class GeneratePdfInput(BaseModel):
+    """Input contract for the ``generate_pdf`` MCP tool."""
+
+    title: str = Field(
+        ...,
+        min_length=1,
+        max_length=200,
+        description="Document title. Also the default filename base.",
+    )
+    markdown_body: str = Field(
+        ...,
+        min_length=1,
+        max_length=200_000,
+        description=(
+            "Finished document content as CommonMark markdown. The caller "
+            "supplies the authored text; this tool does not generate it."
+        ),
+    )
+    filename: str | None = Field(
+        default=None,
+        max_length=200,
+        description=(
+            "Optional download filename. Sanitised server-side; a '.pdf' "
+            "suffix is enforced. Defaults to a slug of the title."
+        ),
+    )
+
+
+class GeneratePdfResponse(BaseModel):
+    """Output contract for the ``generate_pdf`` MCP tool."""
+
+    status: PdfStatus
+    document_id: str = Field(description="Opaque identifier; also the storage key prefix.")
+    filename: str = Field(description="Download filename delivered to the end user.")
+    mime_type: str = "application/pdf"
+    page_count: int | None = Field(
+        default=None,
+        description="Rendered page count. Null when status is 'failed'.",
+    )
+    download_url: str | None = Field(
+        default=None,
+        description="Presigned GET URL. Null when status is 'failed'.",
+    )
+    expires_at: str | None = Field(
+        default=None,
+        description="ISO-8601 UTC instant at which download_url stops working.",
+    )
+    error: str | None = Field(
+        default=None,
+        description="Short human-readable reason when status is 'failed'.",
+    )
